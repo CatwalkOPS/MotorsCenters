@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pagamento - CatWalk</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .colored-toast.swal2-icon-success {
+            background: #00C851 !important;
+        }
+        .colored-toast.swal2-icon-error {
+            background: #ff4444 !important;
+        }
+        .colored-toast .swal2-title {
+            color: white;
+        }
+        .colored-toast .swal2-close {
+            color: white;
+        }
+        .colored-toast .swal2-html-container {
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">CatWalk</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Início</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="produtos.html">Produtos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="sobre.html">Sobre</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="contato.html">Contato</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Conteúdo Principal -->
+    <div class="container my-5">
+        <div class="row">
+            <!-- Resumo do Pedido -->
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Resumo do Pedido</h5>
+                        <div id="resumoPedido"></div>
+                        <hr>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h6 class="mb-0">Total</h6>
+                            <span>R$ <span id="totalPedido">0.00</span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Opções de Pagamento -->
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Escolha a Forma de Pagamento</h5>
+                        
+                        <!-- PIX -->
+                        <div class="payment-option mb-4">
+                            <div class="d-flex align-items-center mb-3">
+                                <i class="fas fa-qrcode fa-2x me-3"></i>
+                                <h6 class="mb-0">PIX (10% de desconto)</h6>
+                            </div>
+                            <button class="btn btn-primary w-100" onclick="gerarPix()">
+                                Pagar com PIX
+                            </button>
+                        </div>
+
+                        <!-- Boleto -->
+                        <div class="payment-option">
+                            <div class="d-flex align-items-center mb-3">
+                                <i class="fas fa-barcode fa-2x me-3"></i>
+                                <h6 class="mb-0">Boleto Bancário</h6>
+                            </div>
+                            <button class="btn btn-outline-light w-100" onclick="gerarBoleto()">
+                                Gerar Boleto
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal PIX -->
+    <div class="modal fade" id="modalPix" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Pagamento via PIX</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <div id="qrcodePix" class="mb-3"></div>
+                    <p class="mb-3">Valor: R$ <span id="valorPix">0.00</span></p>
+                    <p class="mb-3">Chave PIX: <span id="chavePix">19984563985</span></p>
+                    <button class="btn btn-primary" onclick="copiarChavePix()">
+                        <i class="fas fa-copy me-2"></i>Copiar Chave PIX
+                    </button>
+                    <div class="mt-4">
+                        <button class="btn btn-success" onclick="finalizarPedido()">
+                            <i class="fas fa-check me-2"></i>Finalizar Pedido
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Boleto -->
+    <div class="modal fade" id="modalBoleto" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Boleto Bancário</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <p class="mb-2">Valor: R$ <span id="valorBoleto">0.00</span></p>
+                        <p class="mb-2">Vencimento: <span id="vencimentoBoleto"></span></p>
+                    </div>
+                    <div id="codigoBoleto" class="mb-3"></div>
+                    <button class="btn btn-primary" onclick="imprimirBoleto()">
+                        <i class="fas fa-print me-2"></i>Imprimir Boleto
+                    </button>
+                    <div class="mt-4">
+                        <button class="btn btn-success" onclick="finalizarPedido()">
+                            <i class="fas fa-check me-2"></i>Finalizar Pedido
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-light py-4 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>CatWalk</h5>
+                    <p>Seu estilo, nossa paixão.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <div class="social-links">
+                        <a href="#" class="text-light me-3"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-light me-3"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="text-light"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="js/pagamento.js"></script>
+</body>
+</html> 

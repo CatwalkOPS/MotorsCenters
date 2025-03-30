@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrinho - MotoParts</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">MotoParts</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Início</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="produtos.html">Produtos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="carrinho.html">Carrinho</a>
+                    </li>
+                    <li class="nav-item" id="adminLink" style="display: none;">
+                        <a class="nav-link" href="admin.html">Admin</a>
+                    </li>
+                </ul>
+                <div class="d-flex">
+                    <span class="nav-link text-light me-3" id="userInfo" style="display: none;">
+                        Olá, <span id="userName"></span>
+                    </span>
+                    <button class="btn btn-outline-light" onclick="logout()" id="logoutBtn" style="display: none;">Sair</button>
+                    <a href="login.html" class="btn btn-outline-light me-2" id="loginBtn">Login</a>
+                    <a href="registro.html" class="btn btn-primary" id="registerBtn">Registrar</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Conteúdo do Carrinho -->
+    <div class="container mt-5">
+        <div id="alertMessage" class="alert" style="display: none;"></div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">Carrinho de Compras</h4>
+            </div>
+            <div class="card-body">
+                <div id="cartItems">
+                    <!-- Itens do carrinho serão carregados dinamicamente -->
+                </div>
+                <div class="text-end mt-4">
+                    <h4>Total: R$ <span id="cartTotal">0.00</span></h4>
+                    <button class="btn btn-primary" onclick="finalizarCompra()" id="checkoutBtn" style="display: none;">
+                        Finalizar Compra
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/carrinho.js"></script>
+</body>
+</html> 

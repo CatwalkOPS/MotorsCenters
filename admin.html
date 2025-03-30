@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - MotoParts</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .colored-toast.swal2-icon-success {
+            background: #00C851 !important;
+        }
+        .colored-toast.swal2-icon-error {
+            background: #ff4444 !important;
+        }
+        .colored-toast .swal2-title {
+            color: white;
+        }
+        .colored-toast .swal2-close {
+            color: white;
+        }
+        .colored-toast .swal2-html-container {
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">MotoParts</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Início</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="produtos.html">Produtos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="sobre.html">Sobre Nós</a>
+                    </li>
+                </ul>
+                <div id="userInfo" style="display: none;">
+                    <span class="text-light me-3">Olá, <span id="userName"></span></span>
+                    <button class="btn btn-outline-light" onclick="logout()">Sair</button>
+                </div>
+                <div id="loginButtons" style="display: none;">
+                    <a href="login.html" class="btn btn-outline-light me-2">Login</a>
+                    <a href="registro.html" class="btn btn-outline-light">Registrar</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Conteúdo Principal -->
+    <div class="container mt-4">
+        <div id="alertMessage" class="alert" style="display: none;"></div>
+        
+        <!-- Tabs de Navegação -->
+        <ul class="nav nav-tabs mb-4" id="adminTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="produtos-tab" data-bs-toggle="tab" data-bs-target="#produtos" type="button" role="tab">
+                    <i class="fas fa-box me-2"></i>Produtos
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="pedidos-tab" data-bs-toggle="tab" data-bs-target="#pedidos" type="button" role="tab">
+                    <i class="fas fa-shopping-cart me-2"></i>Pedidos
+                </button>
+            </li>
+        </ul>
+
+        <!-- Conteúdo das Tabs -->
+        <div class="tab-content" id="adminTabsContent">
+            <!-- Tab de Produtos -->
+            <div class="tab-pane fade show active" id="produtos" role="tabpanel">
+                <h2>Gerenciamento de Produtos</h2>
+                
+                <!-- Formulário de Produto -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">Adicionar/Editar Produto</h5>
+                        <form id="produtoForm">
+                            <input type="hidden" id="produtoId">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="nomeProduto" class="form-label">Nome do Produto</label>
+                                        <input type="text" class="form-control" id="nomeProduto" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="categoriaProduto" class="form-label">Categoria</label>
+                                        <select class="form-select" id="categoriaProduto" required>
+                                            <option value="escapamentos">Escapamentos</option>
+                                            <option value="manoplas">Manoplas</option>
+                                            <option value="rodas">Rodas</option>
+                                            <option value="pneus">Pneus</option>
+                                            <option value="acessorios">Acessórios</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="precoProduto" class="form-label">Preço</label>
+                                        <input type="number" class="form-control" id="precoProduto" step="0.01" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="estoqueProduto" class="form-label">Estoque</label>
+                                        <input type="number" class="form-control" id="estoqueProduto" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="descricaoProduto" class="form-label">Descrição</label>
+                                <textarea class="form-control" id="descricaoProduto" rows="3" required></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="imagemProduto" class="form-label">URL da Imagem</label>
+                                <input type="url" class="form-control" id="imagemProduto" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Salvar Produto</button>
+                            <button type="button" class="btn btn-secondary" onclick="limparFormulario()">Cancelar</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Lista de Produtos -->
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Lista de Produtos</h5>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Imagem</th>
+                                        <th>Nome</th>
+                                        <th>Categoria</th>
+                                        <th>Preço</th>
+                                        <th>Estoque</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="produtosTable">
+                                    <!-- Produtos serão carregados aqui -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab de Pedidos -->
+            <div class="tab-pane fade" id="pedidos" role="tabpanel">
+                <h2>Gerenciamento de Pedidos</h2>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Cliente</th>
+                                        <th>CPF</th>
+                                        <th>Valor</th>
+                                        <th>Status</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="pedidosTable">
+                                    <!-- Pedidos serão carregados aqui -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Detalhes do Pedido -->
+    <div class="modal fade" id="modalDetalhesPedido" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Detalhes do Pedido</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="detalhesPedido">
+                        <!-- Detalhes do pedido serão carregados aqui -->
+                    </div>
+                    <form id="formAtualizarStatus">
+                        <div class="mb-3">
+                            <label class="form-label">Status do Pedido</label>
+                            <select class="form-select" id="statusPedido" required>
+                                <option value="Pendente">Pendente</option>
+                                <option value="Em Preparação">Em Preparação</option>
+                                <option value="Em Trânsito">Em Trânsito</option>
+                                <option value="Entregue">Entregue</option>
+                                <option value="Cancelado">Cancelado</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Atualizar Status</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/admin.js"></script>
+</body>
+</html> 
